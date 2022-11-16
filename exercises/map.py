@@ -15,13 +15,13 @@ class MapExercise:
 
         rtn = "rating_kinopoisk"
         cntr = "country"
-        delimiter = ","
+        char_to_count = ","
 
         filtered_movies = filter(
-            lambda movie: len(movie[cntr].split(delimiter)) >= 2, list_of_movies
+            lambda movie: movie[cntr].count(char_to_count) + 1 >= 2, list_of_movies
         )
         ratings = map(lambda movie: movie[rtn], filtered_movies)
-        filtered_ratings = filter(lambda rating: rating not in ["", "0"], ratings)
+        filtered_ratings = filter(lambda rating: rating not in {"", "0"}, ratings)
         ratings_as_floats = map(lambda rating: float(rating), filtered_ratings)
         floats_as_list = list(ratings_as_floats)
 
