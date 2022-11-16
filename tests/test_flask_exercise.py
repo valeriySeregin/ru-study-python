@@ -79,3 +79,11 @@ class TestFlaskExercise:
     def test_not_found(self) -> None:
         response = self.flask_client.get("/404")
         assert response.status_code == HTTPStatus.NOT_FOUND
+
+    def test_patch_not_found(self) -> None:
+        response = self.flask_client.patch("/user/Heisenberg")
+        assert response.status_code == HTTPStatus.NOT_FOUND
+
+    def test_delete_not_found(self) -> None:
+        response = self.flask_client.patch("/user/Heisenberg")
+        assert response.status_code == HTTPStatus.NOT_FOUND
