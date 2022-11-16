@@ -58,18 +58,24 @@ class FlaskExercise:
 
         @app.patch("/user/<name>")
         def patch_user(name: str = None) -> tuple:
-            request_data = request.get_json()
+            if name in users:
+                request_data = request.get_json()
 
-            new_name = request_data["name"]
-            users[new_name] = users[name]
-            del users[name]
+                new_name = request_data["name"]
+                users[new_name] = users[name]
+                del users[name]
 
-            data_to_return = {"data": f"My name is {new_name}"}
+                data_to_return = {"data": f"My name is {new_name}"}
 
-            return jsonify(data_to_return), 200
+                return jsonify(data_to_return), 200
+
+            return "", 404
 
         @app.delete("/user/<name>")
         def delete_user(name: str = None) -> tuple:
-            del users[name]
+            if name in users:
+                del users[name]
 
-            return "", 204
+                return "", 204
+
+            return "", 404
