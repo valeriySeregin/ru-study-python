@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 
 
 class FlaskExercise:
@@ -28,4 +28,54 @@ class FlaskExercise:
 
     @staticmethod
     def configure_routes(app: Flask) -> None:
-        pass
+        users: dict = {}
+
+        @app.post("/user")
+        def create_user() -> tuple:
+            request_data = request.get_json()
+
+            if "name" in request_data:
+                username = request_data["name"]
+                del request_data["name"]
+                users[username] = request_data
+
+                data_to_return = {"data": f"User {username} is created!"}
+
+                return jsonify(data_to_return), 201
+
+            errors = {"errors": {"name": "This field is required"}}
+
+            return jsonify(errors), 422
+
+        @app.get("/user/<name>")
+        def get_user(name: str = None) -> tuple:
+            if name in users:
+                data_to_return = {"data": f"My name is {name}"}
+
+                return jsonify(data_to_return), 200
+
+            return "", 404
+
+        @app.patch("/user/<name>")
+        def patch_user(name: str = None) -> tuple:
+            if name in users:
+                request_data = request.get_json()
+
+                new_name = request_data["name"]
+                users[new_name] = users[name]
+                del users[name]
+
+                data_to_return = {"data": f"My name is {new_name}"}
+
+                return jsonify(data_to_return), 200
+
+            return "", 404
+
+        @app.delete("/user/<name>")
+        def delete_user(name: str = None) -> tuple:
+            if name in users:
+                del users[name]
+
+                return "", 204
+
+            return "", 404
